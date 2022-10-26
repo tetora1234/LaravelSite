@@ -5,31 +5,33 @@
     <meta charset="UTF-8">
     <title></title>
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.css" rel="stylesheet">
-    <link href="../images/style.css" rel="stylesheet">
-    <link href="../comi_style.css" rel="stylesheet">
+    <link href="{{ asset('/slick_custom/images/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('/slick_custom/comi_style.css') }}" rel=" stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+
     <script>
         /** 入力ここから **/
-        var page = 4; //ページ数
+        var page = {{ substr_count($product->sampleimages, ',')+1 }}; //ページ数
         var imgtype = "png"; //画像の拡張子
-        var title = "タイトル名"; //タイトル名
-        var site = "http://wp955234.wpx.jp/"; //サイトのURL
-        var copy = "作者名"; //作者名
-        var display = 0; //左ページ始まりは「0」、右ページ始まりは「1」
+        var title = "{{ $product->title }}"; //タイトル名
+        var site = "{{ url()->previous() }}"; //サイトのURL
+        var copy = "{{ $product->author }}"; //作者名
+        var display = 1; //左ページ始まりは「0」、右ページ始まりは「1」
         /* *ここまで **/
 
         $(function() {
             $("title,h1").text(title);
             $(".o_button").attr("onClick", "location.href='" + site + "'");
             $(".copy").text(copy);
-            for (var i = 1; i <= page; i++) {
-                $('#last_page').before('<div class="c_i"><div><img data-lazy="https://doujin-assets.dmm.co.jp/digital/cg/d_242481/d_242481jp-001.jpg" src="../images/load.gif"></div></div>');
-            }
-
-            /**長すぎるからh1の方のタイトル改行したいって時var/コメントアウト解除して編集**/
-            //$("h1").html("サンプル<br>サンプル");
-
         });
     </script>
 </head>
@@ -38,6 +40,15 @@
     <!--漫画表示ゾーンここから-->
     <div class="slider" dir="rtl">
         <div id="first_page"></div>
+        <?php $sampleimages = $product->sampleimages;
+            $sampleimages = explode (',', $sampleimages) ?>
+
+        @foreach ($sampleimages as $sampleimage)
+        <div class="c_i">
+            <div><img data-lazy="{{ $sampleimage }}" src="{{ asset('/slick_custom/images/load.gif') }}"></div>
+        </div>
+        @endforeach
+
         <div id="last_page">
             <div class="last_page_in" dir="ltr">
                 <div>
@@ -60,6 +71,9 @@
                     <input type="button" value="もう一度読む" class="button b_button">
                     <input type="button" value="サイトへ戻る" class="button o_button orange">
                 </p>
+                <div class="d-grid gap-2 col-6 mx-auto">
+                    <a href="{{ $product->affiliateurl }}" class="btn btn-dark">購入する</a>
+                </div>
             </div>
         </div>
     </div>
@@ -94,7 +108,7 @@
     <!--操作ヘルプここから-->
     <div class="help">
         <div class="help_in">
-            <div class="help_img"><img src="../images/help.png" width="300"></div>
+            <div class="help_img"><img src="{{ asset('/slick_custom/images/help.png') }}" width="300"></div>
             <p>【画面操作】</p>
             <!--class="sp_none"でPC以外だと非表示・class="pc_none"でPCだと非表示-->
             <ul class="pc_none">
@@ -129,7 +143,7 @@
         </div>
         <div class="guide_operation">
             <!--ガイド内容ここから-->
-            <img src="../images/guide.png" width="190"><br>
+            <img src="{{ asset('/slick_custom/images/guide.png') }}" width="190"><br>
             横へ読みます
             <!--ガイド内容ここまで-->
         </div>
@@ -145,7 +159,7 @@
     <!--拡大モードここまで-->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
-    <script src="../comic.js"></script>
+    <script src="{{ asset('/slick_custom/comic.js') }}"></script>
 </body>
 
 </html>
